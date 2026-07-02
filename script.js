@@ -1,4 +1,17 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, limit, startAfter, doc, deleteDoc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, signOut, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+// ⚠️ GITHUB VERSION: API Keys hidden for security.
+// Local testing ke liye apni asli keys use karein.
+const firebaseConfig = {
+    apiKey: "YOUR_API_KEY_HERE",
+    authDomain: "shobhanpur-market.firebaseapp.com",
+    projectId: "shobhanpur-market",
+    storageBucket: "shobhanpur-market.firebasestorage.app",
+    messagingSenderId: "166598751270",
+    appId: "1:166598751270:web:d4f6c47f8d750b13eaa2e7"
+};
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -18,15 +31,29 @@ let currentReceiverId = null;
 let chatUnsubscribe = null;
 
 // 🔥 INFINITE SCROLL VARIABLES 🔥
-let lastVisibleDoc = null; // To track where we stopped
-let isFetching = false;    // To prevent double loading
-let isEndOfData = false;   // To stop when data finishes
+let lastVisibleDoc = null; 
+let isFetching = false;    
+let isEndOfData = false;   
 
 const categoryData = {
     sell: ["Bike/Scooty", "Car/Vehicle", "Cycle", "Mobile/Electronics", "Land/Plot", "Hardware/Tools", "Furniture", "Others"],
     job: ["Labour/Worker", "Mistri (Raj/Tile)", "Data Entry/Computer", "Driver", "Cook/Helper", "Teacher/Tutor", "Others"],
     promotion: ["Shop Banner", "Coaching", "Service Center", "Clinic/Doctor", "Others"]
 };
+
+// 🛡️ SECURITY FIX: XSS Protection Function (हैकिंग से बचाने के लिए)
+function escapeHTML(str) {
+    if (typeof str !== 'string') return str;
+    return str.replace(/[&<>'"]/g, 
+        tag => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            "'": '&#39;',
+            '"': '&quot;'
+        }[tag] || tag)
+    );
+}
 
 // --- WINDOW FUNCTIONS ---
 window.openLoginModal = () => { document.getElementById('loginModal').style.display = 'flex'; }
@@ -49,7 +76,7 @@ window.openProfile = () => {
     if(!currentUser) return; 
     document.getElementById('profileModal').style.display = 'flex'; 
     document.getElementById('profPic').src = currentUser.photoURL || "https://cdn-icons-png.flaticon.com/512/149/149071.png"; 
-    document.getElementById('profName').innerText = currentUser.displayName || currentUser.email.split('@')[0]; 
+    document.getElementById('profName').innerText = escapeHTML(currentUser.displayName || currentUser.email.split('@')[0]); 
     window.switchProfileTab('my-ads'); 
 }
 
@@ -81,7 +108,7 @@ async function loadUserChats(container) {
         snap.forEach(docSnap => {
             const chat = docSnap.data();
             const chatId = docSnap.id;
-            const chatTitle = chat.adTitle || "Chat";
+            const chatTitle = escapeHTML(chat.adTitle || "Chat");
             const otherUserId = chat.users.find(id => id !== currentUser.uid);
             const isUnread = (chat.unreadBy === currentUser.uid);
             const div = document.createElement('div');
@@ -114,7 +141,7 @@ window.updateCategoryOptions = () => {
     otherInput.style.display = 'none';
     if(type && categoryData[type]) {
         catSelect.disabled = false;
-        categoryData[type].forEach(cat => { catSelect.innerHTML += `<option value="${cat}">${cat}</option>`; });
+        categoryData[type].forEach(cat => { catSelect.innerHTML += `<option value="${escapeHTML(cat)}">${escapeHTML(cat)}</option>`; });
     } else { catSelect.disabled = true; }
 };
 
@@ -132,7 +159,7 @@ window.handleGoogleLogin = async () => {
         if (!docSnap.exists()) {
             await setDoc(userRef, { email: user.email, favorites: [], createdAt: serverTimestamp() });
         }
-        alert(`Welcome ${user.displayName || 'User'}!`);
+        alert(`Welcome ${escapeHTML(user.displayName || 'User')}!`);
         window.closeModal('loginModal');
     } catch (e) { alert("Google Login Error: " + e.message); }
 };
@@ -152,7 +179,7 @@ window.handleAuth = async () => {
 window.resetPassword = async () => {
     const email = document.getElementById('authEmail').value;
     if (!email) { alert("Enter Email first!"); return; }
-    try { await sendPasswordResetEmail(auth, email); alert("Reset link sent to " + email); } catch (e) { alert("Error: " + e.message); }
+    try { await sendPasswordResetEmail(auth, email); alert("Reset link sent to " + escapeHTML(email)); } catch (e) { alert("Error: " + e.message); }
 }
 
 window.logout = () => { signOut(auth).then(() => { location.reload(); }); };
@@ -169,7 +196,6 @@ onAuthStateChanged(auth, async (user) => {
         document.querySelector('.login-btn').style.display = 'block';
         document.querySelector('.user-pic').style.display = 'none';
     }
-    // 🔥 Initial Load (Reset)
     resetAndLoad();
 });
 
@@ -204,7 +230,7 @@ window.updatePreviewUI = () => {
     selectedImages.forEach((imgSrc, index) => {
         const wrapper = document.createElement('div');
         wrapper.className = 'preview-wrapper';
-        wrapper.innerHTML = `<img src="${imgSrc}" class="preview-thumb"><div class="remove-img-btn" onclick="removeImage(${index})">×</div>`;
+        wrapper.innerHTML = `<img src="${escapeHTML(imgSrc)}" class="preview-thumb"><div class="remove-img-btn" onclick="removeImage(${index})">×</div>`;
         previewArea.appendChild(wrapper);
     });
 };
@@ -239,7 +265,6 @@ window.submitAd = async (e) => {
         selectedImages = [];
         window.updatePreviewUI();
         window.closeModal('postModal');
-        // Reload list
         resetAndLoad();
     } catch (e) { alert("Error: " + e.message); }
     btn.innerText = "Publish Ad Now"; btn.disabled = false;
@@ -250,7 +275,7 @@ window.startChat = (itemId, ownerId, itemTitle) => {
     if (currentUser.uid === ownerId) { alert("This is your own Ad!"); return; }
     currentChatId = `${itemId}_${currentUser.uid}`;
     currentReceiverId = ownerId; 
-    document.getElementById('chatHeaderName').innerText = `Chat: ${itemTitle}`;
+    document.getElementById('chatHeaderName').innerText = `Chat: ${escapeHTML(itemTitle)}`;
     document.getElementById('chatModal').style.display = 'flex';
     document.getElementById('chatMessages').innerHTML = '<p style="text-align:center; color:#888;">Loading...</p>';
     setDoc(doc(db, "chats", currentChatId), { users: [currentUser.uid, ownerId], adTitle: itemTitle, updatedAt: serverTimestamp(), unreadBy: "" }, { merge: true });
@@ -267,7 +292,7 @@ function loadMessages() {
             const msg = doc.data();
             const div = document.createElement('div');
             div.className = `chat-msg ${msg.senderId === currentUser.uid ? 'sent' : 'received'}`;
-            div.innerText = msg.text;
+            div.innerText = msg.text; // innerText is safe from XSS by default
             chatBox.appendChild(div);
         });
         chatBox.scrollTop = chatBox.scrollHeight;
@@ -296,14 +321,12 @@ window.changeSlide = (btn, direction) => {
     slides[newIndex].classList.add('active');
 };
 
+// 🛡️ SECURITY FIX applied in renderData
 function renderData(data, container) {
-    // 🔥 Removed container.innerHTML = '' to allow appending
     if (data.length === 0 && allListingsData.length === 0) { 
         container.innerHTML = '<p style="text-align:center; padding:20px;">No ads found.</p>'; return; 
     }
     
-    // Instead of appending one by one, we re-render filtered data
-    // This logic keeps your filters working with infinite scroll
     container.innerHTML = ''; 
 
     data.forEach(item => {
@@ -314,29 +337,36 @@ function renderData(data, container) {
         let imageHtml = '';
         if (item.images && item.images.length > 1) {
             let slides = '';
-            item.images.forEach((img, index) => { slides += `<img src="${img}" class="slide-img ${index === 0 ? 'active' : ''}">`; });
+            item.images.forEach((img, index) => { slides += `<img src="${escapeHTML(img)}" class="slide-img ${index === 0 ? 'active' : ''}">`; });
             imageHtml = `<div class="slider-container"><button class="prev-btn" onclick="changeSlide(this, -1)">&#10094;</button>${slides}<button class="next-btn" onclick="changeSlide(this, 1)">&#10095;</button></div>`;
         } else {
             const imgSrc = (item.images && item.images.length > 0) ? item.images[0] : (item.image || 'placeholder.jpg');
-            imageHtml = `<img src="${imgSrc}" style="width:100%; height:200px; object-fit:cover;">`;
+            imageHtml = `<img src="${escapeHTML(imgSrc)}" style="width:100%; height:200px; object-fit:cover;">`;
         }
+        
+        const safeTitle = escapeHTML(item.title);
+        const safePrice = escapeHTML(item.price);
+        const safeLocation = escapeHTML(item.location);
+        const safeDesc = escapeHTML(item.desc);
+        const safePhone = escapeHTML(item.phone);
+
         const card = `
             <div class="card ${isFeatured ? 'featured-card' : ''}">
                 <div class="card-header">
-                   ${isFeatured ? `<span class="featured-badge">⭐ FEATURED</span>` : `<span class="card-tag">${item.type}</span>`}
+                   ${isFeatured ? `<span class="featured-badge">⭐ FEATURED</span>` : `<span class="card-tag">${escapeHTML(item.type)}</span>`}
                    ${imageHtml}
                    <button class="delete-btn" style="display:${isOwner ? 'flex' : 'none'}" onclick="deleteAd('${item.id}')">🗑️</button>
                    <button id="like-${item.id}" class="like-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike('${item.id}')">${isLiked ? '&#10084;' : '&#9825;'}</button>
                 </div>
                 <div class="card-body">
-                    <h3>${item.title}</h3>
-                    <p class="price">₹ ${item.price}</p>
-                    <p class="location">📍 ${item.location}</p>
-                    <button class="speak-btn" onclick="speakAd('Suniye ${item.title} ka daam ${item.price} hai')">🔊 सुनिए</button>
-                    <p style="font-size:0.9rem; color:#555; margin-bottom:10px;">${item.desc}</p>
+                    <h3>${safeTitle}</h3>
+                    <p class="price">₹ ${safePrice}</p>
+                    <p class="location">📍 ${safeLocation}</p>
+                    <button class="speak-btn" onclick="speakAd('Suniye ${safeTitle} ka daam ${safePrice} hai')">🔊 सुनिए</button>
+                    <p style="font-size:0.9rem; color:#555; margin-bottom:10px;">${safeDesc}</p>
                     <div class="btn-group">
-                        <button class="chat-btn" onclick="startChat('${item.id}', '${item.userId}', '${item.title}')">💬 Chat</button>
-                        <a href="tel:${item.phone}" class="call-btn">📞 Call</a>
+                        <button class="chat-btn" onclick="startChat('${item.id}', '${item.userId}', '${safeTitle}')">💬 Chat</button>
+                        <a href="tel:${safePhone}" class="call-btn">📞 Call</a>
                     </div>
                     <div style="font-size:0.75rem; color:#999; text-align:right; margin-top:5px;">📅 ${dateStr}</div>
                 </div>
@@ -344,7 +374,6 @@ function renderData(data, container) {
         container.innerHTML += card;
     });
 
-    // Add loader at bottom if fetching
     if(isFetching) {
         container.innerHTML += '<p style="text-align:center; padding:10px;">⏳ Loading more ads...</p>';
     }
@@ -366,7 +395,6 @@ window.toggleLike = async (id) => {
         if (userFavorites.includes(id)) { await setDoc(userRef, { favorites: arrayRemove(id) }, { merge: true }); userFavorites = userFavorites.filter(i => i !== id); }
         else { await setDoc(userRef, { favorites: arrayUnion(id) }, { merge: true }); userFavorites.push(id); }
         window.switchProfileTab('saved-ads'); 
-        // Just refresh view, don't reload from DB
         window.applyFilters();
     } catch(e) { console.error(e); }
 };
@@ -377,7 +405,6 @@ async function loadUserFavorites() {
     if (docSnap.exists()) userFavorites = docSnap.data().favorites || [];
 }
 
-// 🔥 HELPER TO RESET LIST (Used when Filter Change / Initial Load)
 function resetAndLoad() {
     allListingsData = [];
     lastVisibleDoc = null;
@@ -386,14 +413,12 @@ function resetAndLoad() {
     loadListings(false);
 }
 
-// 🔥 MAIN LOAD FUNCTION (Supports Pagination)
 async function loadListings(isNextPage = false) {
     if (isFetching || (isNextPage && isEndOfData)) return;
     
     isFetching = true;
     const container = document.getElementById('listingsArea');
     
-    // Logic for loading spinner
     if(isNextPage) renderData(allListingsData, container); 
 
     try { 
@@ -401,10 +426,8 @@ async function loadListings(isNextPage = false) {
         const listingsRef = collection(db, "listings");
 
         if (!lastVisibleDoc) {
-            // First 10 items
             q = query(listingsRef, orderBy("timestamp", "desc"), limit(10));
         } else {
-            // Next 10 items (start after last one)
             q = query(listingsRef, orderBy("timestamp", "desc"), startAfter(lastVisibleDoc), limit(10));
         }
 
@@ -413,14 +436,12 @@ async function loadListings(isNextPage = false) {
         if (snap.empty) {
             isEndOfData = true;
             isFetching = false;
-            if(isNextPage) renderData(allListingsData, container); // Update to remove loader
+            if(isNextPage) renderData(allListingsData, container); 
             return;
         }
 
-        // Update Last Visible Doc
         lastVisibleDoc = snap.docs[snap.docs.length - 1];
 
-        // Append new data to master list
         snap.forEach((d) => { allListingsData.push({ id: d.id, ...d.data() }); }); 
         
         window.applyFilters(); 
@@ -432,10 +453,9 @@ async function loadListings(isNextPage = false) {
     isFetching = false;
 }
 
-// 🔥 SCROLL DETECTOR 🔥
 window.onscroll = function() {
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) {
-        loadListings(true); // Load next batch
+        loadListings(true);
     }
 };
 
@@ -455,11 +475,9 @@ window.setMainFilter = (type) => {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); 
     const subArea = document.getElementById('subFiltersArea'); subArea.innerHTML = ''; 
     if(type !== 'all' && categoryData[type]) { 
-        subArea.innerHTML += `<div class="chip active" onclick="setSubFilter('All')">All ${type}</div>`; 
-        categoryData[type].forEach(cat => subArea.innerHTML += `<div class="chip" onclick="setSubFilter('${cat}')">${cat}</div>`); 
+        subArea.innerHTML += `<div class="chip active" onclick="setSubFilter('All')">All ${escapeHTML(type)}</div>`; 
+        categoryData[type].forEach(cat => subArea.innerHTML += `<div class="chip" onclick="setSubFilter('${escapeHTML(cat)}')">${escapeHTML(cat)}</div>`); 
     } 
-    // 🔥 Reload from scratch because maybe user didn't scroll enough to get that category data
-    // (Optional: You can keep filtering locally if you prefer, but reset is safer for filters)
     window.applyFilters(); 
 }
 
