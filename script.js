@@ -1,16 +1,4 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-// 🔥 CHANGES: Added 'limit' and 'startAfter' in imports
-import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, limit, startAfter, doc, deleteDoc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { getAuth, signOut, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-const firebaseConfig = {
-    apiKey: "AIzaSyAAtUKD1sA8XYojOp-MebLAYQ_IW4BMhAk",
-    authDomain: "shobhanpur-market.firebaseapp.com",
-    projectId: "shobhanpur-market",
-    storageBucket: "shobhanpur-market.firebasestorage.app",
-    messagingSenderId: "166598751270",
-    appId: "1:166598751270:web:d4f6c47f8d750b13eaa2e7"
-};
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
