@@ -1,0 +1,81 @@
+/* Reset default browser margins */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #63b69a;
+    color: #333;
+    padding: 2rem;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+header h1 {
+    color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+header p {
+    color: #666;
+}
+
+/* Responsive grid for the 8 cards */
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Base Card Styling */
+.card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    border-top: 5px solid #3498db; /* Blue top border for active cards */
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.card h2 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: #2c3e50;
+}
+
+.card p {
+    font-size: 0.95rem;
+    color: #7f8c8d;
+}
+
+/* Styling specifically for "Coming Soon" cards */
+.card.disabled {
+    border-top: 5px solid #bdc3c7; /* Gray top border */
+    background: #fafafa;
+    cursor: not-allowed;
+}
+
+.card.disabled:hover {
+    transform: none; /* Disables the float-up effect */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.card.disabled h2 {
+    color: #95a5a6;
+}

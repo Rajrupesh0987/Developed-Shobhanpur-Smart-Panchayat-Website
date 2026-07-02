@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>MandarBazar</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="brand-area">
+            <h1>Mandar</h1>
+            <span>Bazar</span>
+        </div>
+        
+        <div class="header-search">
+            <input type="text" id="searchInput" list="searchSuggestions" placeholder="🔍 Search..." onkeyup="applyFilters()">
+            <datalist id="searchSuggestions">
+                <option value="Banka">
+                <option value="Shobhanpur">
+                <option value="Bike">
+                <option value="Mobile">
+                <option value="Job">
+                <option value="etc..">
+            </datalist>
+        </div>
+
+        <div class="user-area">
+            <button class="login-btn" onclick="openLoginModal()">Log_In⏻</button> <!-- This button will be hidden -->
+            <img src="" class="user-pic" onclick="openProfile()" alt="Profile">
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="setMainFilter('all')">All</button>
+            <button class="tab-btn" onclick="setMainFilter('sell')">🛍️ Market</button>
+            <button class="tab-btn" onclick="setMainFilter('job')">💼 Jobs</button>
+            <button class="tab-btn" onclick="setMainFilter('promotion')">📢 Prachar</button>
+        </div>
+
+        <div class="chip-container" id="subFiltersArea"></div>
+
+        <div class="grid" id="listingsArea">
+            <p style="text-align:center; width:100%; color:#666; margin-top:20px;">Loading ads...</p>
+        </div>
+    </div>
+
+
+<!-- hide from here -->
+    <button class="btn-float" onclick="openPostModal()"><span>+</span> Post➜</button>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('loginModal')">&times;</span>
+            <h2 id="authTitle">Login</h2>
+            
+            <button class="auth-btn" onclick="handleGoogleLogin()" style="background:white; color:#333; border:1px solid #ccc; display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:15px;">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"> Sign in with Google
+            </button>
+            
+            <p style="text-align:center; color:#666; margin: 5px 0;">Sign in to enable all features like message etc.</p>
+            <p style="text-align:center; color:#666; margin: 5px 0;">OR</p>
+            <p style="text-align:center; color:#666; margin: 5px 0;">Other Method coming.. after verification</p>
+            <a href="privacy.html" style="color: #0c0a74;">Privacy Policy/User Agreement</a>
+
+            <!-- <input type="text" id="authEmail" class="auth-input" placeholder="Enter Email">
+            <input type="text" id="authPass" class="auth-input" placeholder="Password (Min 6 chars)">
+            <p class="forgot-pass" onclick="resetPassword()" style="color: blue;">Forgot Password?</p>
+            <button class="auth-btn" onclick="handleAuth()">Submit</button>
+            <p class="switch-auth" onclick="toggleAuthMode()">
+                <span id="authSwitchText" style="color: blue;">New User? Create Account(Password yaad rakhein)</span>
+            </p> -->
+        </div> 
+    </div>   
+    <!-- To here -->
+    
+    <!-- hide from here -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('loginModal')">&times;</span>
+            <h2 id="authTitle">Login</h2>
+            
+            <button class="auth-btn" onclick="handleGoogleLogin()" style="background:white; color:#333; border:1px solid #ccc; display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:15px;">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"> Sign in with Google
+            </button>
+            
+            <p style="text-align:center; font-size:0.8rem; color:#888; margin-top:10px;">
+                Secure Login via Google
+            </p>
+        </div>
+    </div>
+<!-- To here -->
+    
+
+    <div id="postModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('postModal')">&times;</span>
+            <h2>Post New Ad</h2>
+            <form id="adForm" onsubmit="submitAd(event)">
+                <label>Main Category:</label>
+                <select id="adType" onchange="updateCategoryOptions()" required>
+                    <option value="">-- Choose Type --</option>
+                    <option value="sell">Sell Item (Market)</option>
+                    <option value="job">Post Job (Hire)</option>
+                    <option value="promotion">Shop Prachar (Promotion)</option>
+                </select>
+
+                <label>Sub Category:</label>
+                <select id="adCategory" onchange="checkOtherCategory()" required disabled>
+                    <option value="">Select Main Category First</option>
+                </select>
+                <input type="text" id="adOtherCategory" placeholder="Specify Category" style="display:none;">
+
+                <input type="text" id="adOwnerName" placeholder="Your Name / Shop Name">
+                <input type="text" id="adTitle" placeholder="Title (e.g. Need Worker)" required>
+                <input type="text" id="adPrice" placeholder="Price / Salary (₹)">
+                <input type="text" id="adLocation" placeholder="Location (e.g. Chowk, Banka)" required>
+                <input type="tel" id="adPhone" placeholder="Mobile Number" required pattern="[0-9]{10}">
+                
+                <textarea id="adDesc" placeholder="Details (Max 100 chars)..." rows="3" maxlength="100"></textarea>
+
+                <div class="file-upload-box" onclick="document.getElementById('fileInput').click()">
+                    <p style="margin:0; color:#008080;">📷 Tap to Add Photo (Max 3)</p>
+                    <p style="margin:0; font-size:0.7rem; color:#666;">(Select one by one)</p>
+                    <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleImageSelect(event)">
+                </div>
+                
+                <div class="preview-container" id="previewArea"></div>
+
+                <div id="loginTipBox" style="display:none; background: #fff3cd; color: #856404; padding: 10px; border-radius: 8px; font-size: 0.85rem; margin: 10px 0; border: 1px solid #ffeeba;">
+                    💡 <strong>Tip:</strong> Ad post karne se pahle Login kar lein, tab chat me bhi baat hoga.
+                </div>
+
+                <button type="submit" class="submit-btn">Publish Ad Now</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="profileModal" class="modal">
+        <div class="modal-content" style="max-width: 500px; height: 80vh;">
+            <span class="close-btn" onclick="closeModal('profileModal')">&times;</span>
+            <div class="profile-header">
+                <img id="profPic" src="" alt="">
+                <h3 id="profName">User Name</h3>
+                <button class="logout-btn" onclick="logout()" style="background:#ff5722; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">Logout</button>
+            </div>
+            <div class="profile-tabs">
+                <div class="p-tab active" onclick="switchProfileTab('my-ads')">My Ads</div>
+                <div class="p-tab" onclick="switchProfileTab('saved-ads')">Saved</div>
+                <div class="p-tab" onclick="switchProfileTab('chats')">💬 Chats</div>
+            </div>
+            <div id="profileContent" class="grid" style="grid-template-columns: 1fr;"></div>
+        </div>
+    </div>
+
+    <div id="chatModal" class="modal">
+        <div class="modal-content" style="height: 80vh; display: flex; flex-direction: column; padding: 0; background: #f0f2f5;">
+            <div style="padding: 15px; background: #008080; color: white; display: flex; justify-content: space-between; align-items: center; border-radius: 10px 10px 0 0;">
+                <h3 id="chatHeaderName" style="margin:0; font-size: 1rem;">Chat</h3>
+                <span style="font-size: 1.5rem; cursor: pointer;" onclick="closeModal('chatModal')">&times;</span>
+            </div>
+
+            <div id="chatMessages" style="flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px;"></div>
+
+            <div style="padding: 10px; background: white; border-top: 1px solid #ddd; display: flex; gap: 10px; align-items: center;">
+                <input type="text" id="chatInput" placeholder="Type a message..." style="flex: 1; padding: 10px; border-radius: 20px; border: 1px solid #ccc;">
+                <button onclick="sendMessage()" style="background: #008080; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer;">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-section">
+        <div class="footer-disclaimer">Disclaimer: Beta Testing it's connecting platform only. <li>  <a href="privacy.html" style="color: #0c0a74;">Privacy Policy/User Agreement</a>  </li>  Please verify items before pay.</div>
+        <div class="footer-actions">
+
+            </li>  All functions are working properly.+Currently page under maintanance</div> <!-- Remove this line when launching the page -->
+           <!-- Paste future App link here -->
+            <!-- Paste home page link here -->
+            <!-- <a href="https://www.instagram.com/rupeshraj4406?igsh=MXFraXpuY3ZuYm04dA==" target="_blank" style="text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
+    <span style="color: #333; font-weight: bold;">Insta</span>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" class="insta-icon" alt="Instagram" style="width: 25px; height: 25px;"> -->
+
+</a>
+        </div>
+    </div>
+
+    <script>
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        if (userAgent.includes("ShobhanpurApp")) {
+            var footerBtn = document.getElementById("footerAppBtn");
+            if(footerBtn) footerBtn.style.display = "none";
+        }
+    </script>
+     <script type="module" src="script.js"></script>
+</body>
+</html>

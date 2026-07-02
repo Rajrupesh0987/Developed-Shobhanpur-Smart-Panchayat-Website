@@ -1,0 +1,117 @@
+/* =========================================
+   1. GLOBAL RESET & BODY STYLES
+   ========================================= */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
+body { background: #f0f2f5; padding-bottom: 60px; padding-top: env(safe-area-inset-top); }
+
+/* =========================================
+   2. HEADER STYLES
+   ========================================= */
+header {
+    background: #008080; color: white;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: nowrap; gap: 10px;
+    padding: 8px 10px; padding-top: max(8px, env(safe-area-inset-top));
+    position: sticky; top: 0; z-index: 1000; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    height: auto; min-height: 55px;
+}
+
+.brand-area { display: flex; flex-direction: column; justify-content: center; flex-shrink: 0; }
+.brand-area h1 { font-size: 1rem; margin: 0; line-height: 1; }
+.brand-area span { font-size: 0.65rem; opacity: 0.9; letter-spacing: 1px; }
+
+.header-search { flex-grow: 1; min-width: 0; }
+.header-search input { width: 100%; padding: 8px 12px; border: none; border-radius: 20px; outline: none; background: rgba(255, 255, 255, 0.95); font-size: 0.9rem; }
+
+.user-area { display: flex; align-items: center; flex-shrink: 0; gap: 8px; }
+.login-btn { background: white; color: #008080; padding: 6px 12px; border: none; border-radius: 15px; font-weight: bold; cursor: pointer; font-size: 0.8rem; white-space: nowrap; }
+.user-pic { width: 35px; height: 35px; border-radius: 50%; border: 2px solid white; cursor: pointer; display: none; object-fit: cover; }
+
+@media (max-width: 380px) {
+    .brand-area h1 { font-size: 0.9rem; }
+    .brand-area span { display: none; }
+    .login-btn { padding: 5px 8px; font-size: 0.75rem; }
+    header { gap: 5px; padding-left: 5px; padding-right: 5px;}
+}
+
+/* =========================================
+   3. TABS & CONTENT
+   ========================================= */
+.container { max-width: 1200px; margin: 0 auto; padding: 10px 5px; }
+.tabs, .chip-container { display: flex; gap: 8px; overflow-x: auto; white-space: nowrap; padding-bottom: 5px; -webkit-overflow-scrolling: touch;}
+.tabs::-webkit-scrollbar, .chip-container::-webkit-scrollbar { display: none; }
+.tab-btn { padding: 6px 14px; border: 1px solid #ddd; background: white; color: #555; border-radius: 20px; font-size: 0.9rem; }
+.tab-btn.active { background: #008080; color: white; border-color: #008080; }
+.chip { padding: 4px 10px; background: #e0e0e0; border-radius: 15px; font-size: 0.85rem; color: #333; border: 1px solid #ccc; }
+.chip.active { background: #ff9800; color: white; border-color: #ff9800; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 10px; margin-top: 10px; }
+@media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+
+.card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: relative; }
+.featured-card { border: 2px solid #ffd700; }
+.featured-badge { position: absolute; top: 8px; left: 8px; background: #ffd700; color: #000; padding: 4px 8px; font-size: 0.7rem; border-radius: 4px; font-weight: bold; z-index: 5; }
+.card-header { position: relative; }
+.card-tag { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); color: white; padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; }
+.delete-btn { position: absolute; top: 8px; right: 8px; background: rgba(255,0,0,0.8); color: white; width: 30px; height: 30px; border-radius: 50%; border: none; z-index: 6; display: none; align-items: center; justify-content: center; cursor: pointer; }
+.like-btn { position: absolute; bottom: -18px; right: 10px; background: white; width: 40px; height: 40px; border-radius: 50%; border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-size: 1.4rem; color: #ccc; z-index: 10; transition: 0.2s; cursor: pointer; }
+.like-btn.liked { color: red; transform: scale(1.1); }
+
+.card-body { padding: 12px; padding-top: 22px; }
+.price { color: #2e7d32; font-weight: bold; font-size: 1.1rem; margin-bottom: 2px; }
+.location { color: #666; font-size: 0.85rem; margin-bottom: 8px; }
+.speak-btn { width: 100%; background: #e0f2f1; color: #00695c; border: 1px solid #008080; padding: 6px; border-radius: 5px; font-size: 0.85rem; margin-bottom: 10px; cursor: pointer; }
+.btn-group { display: flex; gap: 8px; }
+.chat-btn, .call-btn { flex: 1; text-align: center; padding: 8px; border-radius: 5px; color: white; text-decoration: none; font-weight: bold; font-size: 0.9rem; border: none; cursor: pointer;}
+.chat-btn { background: #008080; } .call-btn { background: #2962ff; }
+
+/* =========================================
+   5. MODALS & FORMS
+   ========================================= */
+.btn-float { position: fixed; bottom: 65px; right: 15px; background: #ff5722; color: white; padding: 10px 18px; border-radius: 50px; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.3); font-weight: bold; z-index: 1001; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; }
+.modal-content { background: white; width: 92%; max-width: 400px; padding: 20px; border-radius: 10px; position: relative; max-height: 85vh; overflow-y: auto; }
+.close-btn { position: absolute; top: 10px; right: 15px; font-size: 1.5rem; cursor: pointer; }
+input, select, textarea { width: 100%; padding: 10px; margin: 6px 0; border: 1px solid #ccc; border-radius: 5px; font-size: 0.95rem; }
+.file-upload-box { border: 2px dashed #008080; padding: 15px; text-align: center; background: #f9f9f9; margin: 10px 0; border-radius: 8px; cursor: pointer; }
+.submit-btn, .auth-btn { width: 100%; background: #008080; color: white; padding: 12px; border: none; border-radius: 5px; font-weight: bold; margin-top: 10px; cursor: pointer; }
+
+/* 🔥 IMAGE PREVIEW (One-by-One Style) 🔥 */
+.preview-container { display: flex; gap: 10px; margin-top: 10px; overflow-x: auto; padding-bottom: 5px; }
+.preview-wrapper { position: relative; width: 60px; height: 60px; flex-shrink: 0; }
+.preview-thumb { width: 100%; height: 100%; object-fit: cover; border: 1px solid #ddd; border-radius: 5px; }
+.remove-img-btn { position: absolute; top: -5px; right: -5px; background: red; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid white; z-index: 10; font-weight: bold; font-size: 12px; }
+
+/* Profile & Footer */
+.profile-header { text-align: center; margin-bottom: 15px; }
+.profile-header img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 3px solid #008080; }
+.profile-tabs { display: flex; border-bottom: 1px solid #ddd; margin-bottom: 10px; }
+.p-tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; }
+.p-tab.active { border-bottom: 3px solid #008080; color: #008080; font-weight: bold; }
+.footer-section { background: #2c3e50; color: white; padding: 8px 10px; position: fixed; bottom: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; z-index: 999; font-size: 0.75rem; }
+.footer-disclaimer { font-size: 0.8em; opacity: 0.9; max-width: 65%; line-height: 1.1; text-align: left; }
+.footer-actions { display: flex; gap: 10px; align-items: center; }
+.footer-home-btn, .footer-app-btn { color: white; background: #ff5722; padding: 4px 10px; border-radius: 15px; text-decoration: none; display: flex; align-items: center; gap: 4px; }
+.footer-app-btn { background: #25D366; }
+.insta-icon { width: 26px; height: 26px; margin-left: 5px; filter: drop-shadow(0 0 2px rgba(255,255,255,0.5)); vertical-align: middle; }
+
+/* Slider */
+.slider-container { position: relative; width: 100%; height: 200px; background: #000; overflow: hidden; }
+.slide-img { width: 100%; height: 100%; object-fit: contain; display: none; }
+.slide-img.active { display: block; }
+.prev-btn, .next-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; width: 30px; height: 30px; border-radius: 50%; font-weight: bold; z-index: 5; cursor: pointer; }
+.prev-btn { left: 5px; } .next-btn { right: 5px; }
+
+/* 🔥 CHAT STYLES 🔥 */
+.chat-msg { max-width: 80%; padding: 8px 12px; border-radius: 15px; font-size: 0.9rem; position: relative; word-wrap: break-word; }
+.chat-msg.sent { align-self: flex-end; background-color: #dcf8c6; border-bottom-right-radius: 2px; color: black; }
+.chat-msg.received { align-self: flex-start; background-color: white; border-bottom-left-radius: 2px; color: black; }
+
+/* Inbox Items */
+.chat-item { display: flex; align-items: center; gap: 10px; padding: 10px; background: #f9f9f9; border-radius: 8px; cursor: pointer; border: 1px solid #eee; margin-bottom: 5px; }
+.chat-item:hover { background: #f0f0f0; }
+.chat-info h4 { margin: 0; font-size: 0.95rem; color: #333; }
+.chat-info p { margin: 0; font-size: 0.8rem; color: #666; }
+
+/* 🔥 NEW NOTIFICATION STYLES 🔥 */
+.notification-dot { width: 10px; height: 10px; background: #d24b30; border-radius: 50%; display: inline-block; margin-left: 8px; box-shadow: 0 0 4px rgb(220, 59, 94); }
+.unread-chat-card { background: #e8f5e9 !important; border-left: 4px solid #70ba8b; }

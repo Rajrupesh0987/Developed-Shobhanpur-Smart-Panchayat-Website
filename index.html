@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <body style="background-image: url('village_background.jpg'); background-size: cover; background-attachment: fixed;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Village Life..</title>
+    <style>
+        /* Reset and General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+          
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        /* Header Styles */
+        header {
+            background-color: #86d6eb;
+            color: rgb(119, 132, 148);
+            text-align: center;
+            padding: 2rem 1rem;
+            
+            background-image: url('village_background.jpg');
+            
+            background-size: cover;
+            background-position: center;
+            perspective: 1000px;
+            
+            /* Button ko corner me set karne ke liye ye jaruri hai */
+            position: relative; 
+        }
+
+        /* 👇 NEW APP BUTTON STYLE (Header Corner) 👇 */
+        .header-app-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #25D366; /* WhatsApp Green */
+            color: rgb(248, 248, 245);
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: transform 0.2s;
+            border: 2px solid rgb(240, 239, 238);
+        }
+        .header-app-btn:hover {
+            transform: scale(1.05);
+            background: #1ebe57;
+        }
+
+        /* Mobile ke liye button thoda chhota */
+        @media (max-width: 480px) {
+            .header-app-btn {
+                padding: 6px 10px;
+                font-size: 0.75rem;
+                right: 10px;
+            }
+        }
+
+        header h1 {
+            transform-style: preserve-3d;
+            animation: move3DText 12s linear infinite alternate;
+            font-size: 2.5em;
+            color: #d17171;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            letter-spacing: 2px;
+            font-weight: bold;
+            display: inline-block; /* Taki text box button ke upar na chadh jaye */
+        }
+
+        @keyframes move3DText {
+            0% { transform: rotateX(15deg) rotateY(20deg) translateZ(0); }
+            100% { transform: rotateX(-15deg) rotateY(-20deg) translateZ(80px); }
+        }
+
+        /* Navigation Styles */
+        nav {
+            background-color: #78cbd1;
+            opacity: 0.65;
+            /* background-image: url('village_background.jpg'); */
+            padding: 1rem;
+        }
+
+        nav ul {
+            list-style-type: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav ul li {
+            margin: 0.5rem 1rem;
+        }
+
+        nav ul li a {
+            color: rgb(44, 44, 36);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav ul li a:hover {
+            color: #3d3b37;
+        }
+
+        /* Container and Content Styles */
+        .container {
+            max-width: 1200px;
+            opacity: 0.9;
+            margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            flex-grow: 1;
+        }
+
+        .content {
+            flex: 3;
+            opacity: 0.85;
+            padding-right: 2rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background-color: #a8cca3;
+            opacity: 0.85;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .card img {
+            max-width: 100%;
+            /* opacity: 0.95; */
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .welcome {
+            background-color: #648e91;
+            opacity: 0.9;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        /* Footer Styles */
+        footer {
+            opacity: 0.9;
+            background-color: #466557;
+            color: rgb(19, 20, 19);
+            text-align: center;
+            padding: 1.5rem;
+            width: 100%;
+        }
+
+        /* Visitor Counter Style */
+        .visitor-counter {
+            margin-top: 15px;
+            display: inline-block;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .visitor-counter span {
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .visitor-counter strong {
+            color: #ffd700;
+        }
+
+        /* Developer Profile Styles */
+        .developer-profile {
+            background-color: #dfb294;
+             opacity: 0.85;
+            padding: 1rem;
+            border-radius: 5px;
+            position: fixed;
+            top: 70px;
+            right: -250px;
+            width: 250px;
+            max-height: 80vh;
+            overflow-y: auto;
+            transition: right 0.3s ease;
+            text-align: left;
+            z-index: 1000;
+        }
+
+        .developer-profile.show {
+            right: 0;
+        }
+
+        .developer-profile img {
+            height: 120px;
+            border-radius: 10%;
+            margin-bottom: 1rem;
+        }
+
+        #profile-toggle {
+            position: fixed;
+            top: 80px;
+            right: 10px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 45px;
+            height: 38px;
+            background: transparent;
+            border: none;
+            z-index: 1001;
+        }
+
+        #profile-toggle span {
+            width: 100%;
+            height: 6px;
+            background-color: #000;
+        }
+
+        #profile-label {
+            position: fixed;
+            top: 125px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: #333;
+            text-align: center;
+            width: 45px;
+            z-index: 1001;
+        }
+
+        /* Media Queries */
+        @media screen and (max-width: 1024px) {
+            header { padding: 1.5rem 1rem; }
+            nav ul { justify-content: center; }
+            .container { padding: 1.5rem; flex-direction: column; }
+            .content { padding-right: 0; }
+        }
+
+        @media screen and (max-width: 768px) {
+            nav ul { flex-direction: column; align-items: center; }
+            .container { padding: 1rem; }
+            .grid { grid-template-columns: 1fr; }
+
+            /* MOBILE STATUS BAR FIX GAP */
+            header {
+
+                padding-top: 35px !important; 
+            }
+
+            .header-app-btn {
+                top: 25px !important; /* Pehle 50px tha */
+            }
+
+            /* Profile Toggle buttons adjust */
+            #profile-toggle {
+                top: 75px !important;
+            }
+            #profile-label {
+                top: 120px !important;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            header h1 { font-size: 1.5rem; }
+            .developer-profile { width: 200px; right: -200px; }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <!-- <a href="shobhanpur.apk" download class="header-app-btn"> -->
+            📲 App coming.
+        </a>
+
+        <h1>WELCOME TO SHOBHANPUR</h1>
+    </header>
+
+    <nav>
+        <ul>
+            <!-- <li><a href="home.html" style="color: #00008B;">Home</a></li> -->
+            <li><a href="Education.html" style="color: #00008B;"><strong>EDUCATION</strong></a></li>
+            <li><a href="ai_tools.html" style="color: #00008B;"><strong>AI MODE</strong></a></li>
+            <li><a href="market.html" style="color: #00008B;"><strong>JOB/MARKET/PROMOTION</strong></a></li>
+            <li><a href="gallery.html" style="color: #00008B;">Gallery</a></li>
+            <li><a href="contact.html" style="color: #00008B;">Important Contact</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="content">
+            <section class="welcome">
+                <h2>About Our Village</h2>
+                <h4 style="font-family: 'Fika Black', sans-serif; color: #353333;">Update Aate Rahega..... bs time mil jaye/ Share and Also Downlowd our Mobile application</h4>
+                <p>Discover the serene beauty and rich culture of our village. Nestled among rolling hills and lush greenery, we offer a peaceful retreat from city life.</p>
+                <p>This is located in Banka District, Our village is also Gram panchayat called "Shobhanpur panchayat"</p>
+            </section>
+
+            <div class="grid">
+                <div class="card">
+                    <img src="https://cdn.dollsofindia.com/images/p/village-posters/village-life-of-india-QF82_l.jpg" alt="Village Life">
+                    <h3>Village Life</h3>
+                    <p>Experience authentic rural living with our friendly community.</p>
+                </div>
+                <div class="card">
+                    <img src="nature.jpg.jpg" alt="Nature">
+                    <h3>Nature</h3>
+                    <p>Explore the breathtaking landscapes surrounding our village.</p>
+                </div>
+                <div class="card">
+                    <img src="culture.jpg" alt="Culture">
+                    <h3>Culture</h3>
+                    <p>Immerse yourself in our traditional festivals and crafts.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="developer-profile" id="developerProfile">
+        <div class="developer-profile-content">
+            <img src="developer_image.jpg" alt="Developer Profile">
+            <h3 style="color: rgb(22, 15, 15);">Developed by Er.Rupesh Raj </h3>
+            <h4 style="color: rgb(58, 105, 74);">Visit This Page and Follow me on Social Media Just for Cookies.</h4>
+            <p style="color: rgb(58, 52, 52);">Passionate web developer and Android Developer creating beautiful and functional websites and Applications.</p>
+            <p style="color: rgb(46, 120, 140);">I am just here to helping peoples without any Greedy... </p>
+            <h6 style="color: rgb(241, 78, 91);">आख़िर तुम्हें आना है, ज़रा देर लगेगी.....</h6>
+            <h6 style="color: rgb(227, 70, 195);">पाने की ज़िद में खुद को तपा रहा हूँ,</h6>
+            <h6 style="color: rgb(231, 89, 200);">देर है, अंधेर नहीं, ये यकीन है,</h6>
+            <h6 style="color: rgb(230, 77, 205);">तू मिलेगी मुझे, इसी उम्मीद पे जी रहा हूँ</h6>
+        
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
+                <p>Contact:<a href="mailto:rajrupesh4270@gmail.com">Email Address</a></p>
+                <p>LinkedIn:<a href="https://www.linkedin.com/in/rupeshraj4406/">LinkedIn</a></p>
+                <p>Instagram:<a href="https://www.instagram.com/rupeshraj4406?igsh=MXFraXpuY3ZuYm04dA==">Instagram</a></p>
+            </div>
+        </div>
+        <div class="developer-address-content">
+            <h4>Official Address</h4>
+            <p style="color: rgb(55, 71, 61);"><strong>District:</strong> Banka</p>
+        </div>
+    </section>
+
+    <button id="profile-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <p id="profile-label"><strong>Developer Profile</strong></p>
+
+    <footer>
+        <p>2025 Our Village Life. All rights reserved.</p>
+        <p style="color: rgb(9, 6, 75);"><strong>Contact us:</strong> Email: rajrupesh4270@gmail.com</p>
+        <li><a href="privacy.html" style="color: #00008B;">Privacy Policy/User Agreement</a> </li> 
+        <p style="color: rgb(38, 41, 39);">For more details click on Navigation menu</p>
+        <p style="color: rgb(125, 124, 107);">Disclaimer: This is a private community initiative for Shobhanpur village. It is not an official government website and is not affiliated with any government department or Gram Panchayat office.</p>
+        
+        <div class="visitor-counter">
+            <span>Total Visitors: <strong id="visitor-count">Loading...</strong></span>
+        </div>
+    </footer>
+
+    <script>
+        // Profile Toggle
+        document.getElementById('profile-toggle').addEventListener('click', function () {
+            document.getElementById('developerProfile').classList.toggle('show');
+        });
+
+        // Visitor Counter Script
+        fetch('https://api.countapi.xyz/hit/shobhanpur_site_rupesh/visits')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('visitor-count').innerText = data.value;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('visitor-count').innerText = "N/A";
+        });
+    </script>
+</body>
+</html>

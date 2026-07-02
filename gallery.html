@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        h1 {
+            color: #007bff;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 2rem;
+            color: #555;
+            text-align: center;
+        }
+
+        .gallery-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 1rem 0;
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        .gallery-container img {
+            width: 250px;
+            height: auto;
+            margin: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-container img:hover {
+            transform: scale(1.05);
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+            padding: 10px 15px;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            margin-top: 2rem;
+        }
+
+        a:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .gallery-container img {
+                width: 90%;
+                margin: 0.5rem 0;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .gallery-container img {
+                width: 45%;
+                margin: 0.5rem;
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .gallery-container img {
+                width: 30%;
+                margin: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Gallery</h1>
+
+    <h2>Cultural Images</h2>
+    <h4 style="color: rgb(58, 105, 74);">(send me message from anywhere to add or remove your image)</h4>
+    <div class="gallery-container">
+        
+        <!-- <img src="culture_image1.jpg" alt="Cultural Image 1"> -->
+         
+        <img src="culture_image2.jpg" alt="Cultural Image 2">
+       
+        <img src="culture_image3.jpg" alt="Cultural Image 3">
+        
+        <!-- <img src="culture_image4.jpg" alt="Cultural Image 4"> -->
+        
+    </div>
+
+    <h2>Villagers Images</h2>
+    <div class="gallery-container">
+        <!-- <img src="villager1.jpg" alt="Villager Image 1"> -->
+        <!-- <img src="villager2.jpg" alt="Villager Image 2"> -->
+        <!-- <img src="villager3.jpg" alt="Villager Image 3"> -->
+        <!-- <img src="villager4.jpg" alt="Villager Image 4"> -->
+        <!-- <img src="villager5.jpg" alt="Villager Image 5"> -->
+        <!-- <img src="villager6.jpg" alt="Villager Image 6"> -->
+        <!-- <img src="villager7.jpg" alt="Villager Image 7"> -->
+        <img src="villager8.jpg" alt="Villager Image 8">
+        
+    </div>
+
+    <h2>Nearby Visitable Places</h2>
+    <div class="gallery-container">
+        <img src="place1.jpg" alt="Place 1">
+        <img src="place2.jpg" alt="Place 2">
+        <!-- <img src="place3.jpg" alt="Place 3"> -->
+    
+        
+    </div>
+
+    <a href="index.html">Back to Navigation</a>  <li><a href="privacy.html" style="color: #00008B;">Privacy Policy/User Agreement</a> </li> 
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Our Village</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #64afbe;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: #221f21;
+        }
+
+        .container {
+            background-color: rgb(158, 111, 134);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+            perspective: 1000px;
+            animation: move3DCard 15s linear infinite alternate, tiltCard 5s linear infinite alternate;
+            transform-style: preserve-3d;
+        }
+
+        @keyframes move3DCard {
+            0% {
+                transform: rotateX(5deg) rotateY(5deg) translateZ(0);
+            }
+            100% {
+                transform: rotateX(-5deg) rotateY(-5deg) translateZ(20px);
+            }
+        }
+
+        @keyframes tiltCard {
+            0% {
+                transform: rotateZ(2deg);
+            }
+            100% {
+                transform: rotateZ(-2deg);
+            }
+        }
+
+        h1 {
+            color: #821fc9;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #b45991;
+        }
+
+        li:last-child {
+            border-bottom: none;
+        }
+
+        a {
+            text-decoration: none;
+            color: #101111;
+            padding: 10px 15px;
+            border: 1px solid #2f9da5;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #a57197;
+            color: rgb(48, 15, 155);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 1.5rem;
+                max-width: none;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .container {
+                width: 90%;
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .container {
+                width: 80%;
+                max-width: 600px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>About Our Village</h1>
+        <p>This is our beautiful village, a place where community and tradition thrive.</p>
+        <ul>
+            <li>Panchayat: [Shobhanpur]</li>
+            <li>Police Station: [Coming....]</li>
+            <li>District: [Coming....]</li>
+        </ul>
+        <a href="index.html">Back to Navigation</a>
+    </div>
+</body>
+</html>
